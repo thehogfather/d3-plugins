@@ -11,9 +11,8 @@
         "use strict";
         var hierarchy = d3.layout.hierarchy().sort(null).value(null),
             nodeHeight = 20,
-            childIndent = 20,
-            size;
-
+            childIndent = 20;
+        
         var treelist = function (d, i) {
             var nodes = hierarchy.call(this, d, i),
                 root = nodes[0];
@@ -29,7 +28,6 @@
                     });
                 }
             }
-
             /**
              visit all nodes in the tree and set the x, y positions
             */
@@ -44,18 +42,12 @@
                     n.x = x;
 
                 }, node);
-                //update size after visiting
-                size = [x, y];
             }
 
             layout(root);
             return nodes;
         };
-
-        treelist.size = function () {
-            return size;
-        };
-
+        
         treelist.nodeHeight = function (d) {
             if (arguments.length) {
                 nodeHeight = d;
@@ -72,15 +64,7 @@
             return childIndent;
         };
 
-        d3.rebind(treelist, hierarchy, "sort", "children", "value");
         treelist.nodes = treelist;
-        treelist.links = function (nodes) {
-            return d3.merge(nodes.map(function (parent) {
-                return (parent.children || []).map(function (child) {
-                    return {source: parent, target: child};
-                });
-            }));
-        };
 
         return treelist;
     };
